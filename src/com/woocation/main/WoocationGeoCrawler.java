@@ -15,6 +15,9 @@ import com.woocation.model.Languages;
 import com.woocation.model.Network;
 import com.woocation.model.Population;
 import com.woocation.model.Subway;
+import com.woocation.model.UVBean;
+import com.woocation.model.Vegetation;
+import com.woocation.model.Weather;
 
 /**
  * The Class WoocationGeoCrawler.
@@ -38,14 +41,27 @@ public class WoocationGeoCrawler {
 	/** The language map. */
 	private Map<Long, Languages> languageMap = new HashMap<>();
 	
+	/** The uv map. */
+	private Map<Long, UVBean> uvMap = new HashMap<>();
+	
+	/** The vegetaion. */
+	private Map<Long, Vegetation> vegetationMap = new HashMap<>();
+	
+	/** The weather map. */
+	private Map<Long, Weather> weatherMap = new HashMap<>();
+	
 	/**
 	 * Instantiates a new woocation geo crawler.
 	 */
 	public WoocationGeoCrawler() {
-		readSubwayFile();
+		/*readSubwayFile();
 		readElevationFile();
 		readPopulationFile();
 		readNetworkFile();
+		readLanguageFile();
+		readUVFile();*/
+//		readWeatherFile();
+		readVegetationFile();
 	}
 
 	/**
@@ -85,10 +101,38 @@ public class WoocationGeoCrawler {
 		});
 	}
 	
+	private void readWeatherFile() {
+		List<Weather> weatherList = readFile("E:\\Data\\weather_geonameid.json", Weather.class);
+		weatherList.stream().forEach(item -> {
+			weatherMap.put(Long.valueOf(item.getGeonameid()), item);
+		});
+	}
+	
 	private void readNetworkFile() {
 		List<Network> networkList = readFile("E:\\Data\\network_geonameid.json", Network.class);
 		networkList.stream().forEach(item -> {
 			networkMap.put(Long.valueOf(item.getGeonameid()), item);
+		});
+	}
+	
+	private void readLanguageFile() {
+		List<Languages> languageList = readFile("E:\\Data\\languages_geoname.json", Languages.class);
+		languageList.stream().forEach(item -> {
+			languageMap.put(item.getGeonameid(), item);
+		});
+	}
+	
+	private void readVegetationFile() {
+		List<Vegetation> vegetationList = readFile("E:\\Data\\vegetation_geonameid.json", Vegetation.class);
+		vegetationList.stream().forEach(item -> {
+			vegetationMap.put(Long.valueOf(item.getGeonameid()), item);
+		});
+	}
+	
+	private void readUVFile() {
+		List<UVBean> uvList = readFile("E:\\Data\\uvi_geonameid.json", UVBean.class);
+		uvList.stream().forEach(item -> {
+			uvMap.put(Long.valueOf(item.getGeonameid()), item);
 		});
 	}
 

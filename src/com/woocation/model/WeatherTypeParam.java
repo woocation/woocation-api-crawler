@@ -1,7 +1,5 @@
 package com.woocation.model;
 
-import java.util.List;
-
 /**
  * The Class WeatherTypeParam.
  */
@@ -11,7 +9,7 @@ public class WeatherTypeParam {
 	private String unit;
 	
 	/** The value. */
-	private List<Float> value;
+	private Object value;
 
 	/**
 	 * Gets the unit.
@@ -32,20 +30,16 @@ public class WeatherTypeParam {
 	}
 
 	/**
-	 * Gets the value.
-	 *
 	 * @return the value
 	 */
-	public List<Float> getValue() {
+	public Object getValue() {
 		return value;
 	}
 
 	/**
-	 * Sets the value.
-	 *
 	 * @param value the value to set
 	 */
-	public void setValue(List<Float> value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 }

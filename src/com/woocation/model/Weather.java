@@ -11,7 +11,7 @@ public class Weather {
 	private String geonameid;
 	
 	/** The weather. */
-	private  Map<String, MonthDetail> weather;
+	private  Map<String, Map<String, WeatherTypeParam>> weather;
 
 	/**
 	 * @return the geonameid
@@ -30,16 +30,15 @@ public class Weather {
 	/**
 	 * @return the weather
 	 */
-	public Map<String, MonthDetail> getWeather() {
+	public Map<String, Map<String, WeatherTypeParam>> getWeather() {
 		return weather;
 	}
 
 	/**
 	 * @param weather the weather to set
 	 */
-	public void setWeather(Map<String, MonthDetail> weather) {
+	public void setWeather(Map<String, Map<String, WeatherTypeParam>> weather) {
 		this.weather = weather;
 	}
-
 	
 }
