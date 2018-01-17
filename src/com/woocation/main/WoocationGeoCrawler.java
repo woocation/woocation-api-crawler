@@ -11,6 +11,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woocation.model.Elevation;
+import com.woocation.model.Languages;
 import com.woocation.model.Network;
 import com.woocation.model.Population;
 import com.woocation.model.Subway;
@@ -31,7 +32,11 @@ public class WoocationGeoCrawler {
 	/** The population map. */
 	private Map<Long, Population> populationMap = new HashMap<>();
 
+	/** The network map. */
 	private Map<Long, Network> networkMap = new HashMap<>();
+	
+	/** The language map. */
+	private Map<Long, Languages> languageMap = new HashMap<>();
 	
 	/**
 	 * Instantiates a new woocation geo crawler.
