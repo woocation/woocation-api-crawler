@@ -27,39 +27,39 @@ import com.woocation.model.Weather;
 public class WoocationGeoCrawler {
 
 	/** The subway map. */
-	private Map<Long, Subway> subwayMap = new HashMap<>();
+	public Map<Long, Subway> subwayMap = new HashMap<>();
 
 	/** The elevation map. */
-	private Map<Long, Elevation> elevationMap = new HashMap<>();
+	public Map<Long, Elevation> elevationMap = new HashMap<>();
 
 	/** The population map. */
-	private Map<Long, Population> populationMap = new HashMap<>();
+	public Map<Long, Population> populationMap = new HashMap<>();
 
 	/** The network map. */
-	private Map<Long, Network> networkMap = new HashMap<>();
+	public Map<Long, Network> networkMap = new HashMap<>();
 	
 	/** The language map. */
-	private Map<Long, Languages> languageMap = new HashMap<>();
+	public Map<Long, Languages> languageMap = new HashMap<>();
 	
 	/** The uv map. */
-	private Map<Long, UVBean> uvMap = new HashMap<>();
+	public Map<Long, UVBean> uvMap = new HashMap<>();
 	
 	/** The vegetaion. */
-	private Map<Long, Vegetation> vegetationMap = new HashMap<>();
+	public Map<Long, Vegetation> vegetationMap = new HashMap<>();
 	
 	/** The weather map. */
-	private Map<Long, Weather> weatherMap = new HashMap<>();
+	public Map<Long, Weather> weatherMap = new HashMap<>();
 	
 	/**
 	 * Instantiates a new woocation geo crawler.
 	 */
 	public WoocationGeoCrawler() {
-		/*readSubwayFile();
+		readSubwayFile();
 		readElevationFile();
 		readPopulationFile();
 		readNetworkFile();
 		readLanguageFile();
-		readUVFile();*/
+		readUVFile();
 //		readWeatherFile();
 		readVegetationFile();
 	}
@@ -67,8 +67,8 @@ public class WoocationGeoCrawler {
 	/**
 	 * Read subway file.
 	 */
-	private void readSubwayFile() {
-		String subwayFile = "E:\\Data\\subway_geonameid.json";
+	public void readSubwayFile() {
+		String subwayFile = "D:\\Data\\subway_geonameid.json";
 		try {
 			List<Subway> list = readFile(subwayFile, Subway.class);
 			list.stream().forEach(item -> {
@@ -82,8 +82,8 @@ public class WoocationGeoCrawler {
 	/**
 	 * Read Elevation file.
 	 */
-	private void readElevationFile() {
-		String elevationFile = "E:\\Data\\elevation_geonameid.json";
+	public void readElevationFile() {
+		String elevationFile = "D:\\Data\\elevation_geonameid.json";
 		try {
 			List<Elevation> list = readFile(elevationFile, Elevation.class);
 			list.stream().forEach(item -> {
@@ -94,49 +94,49 @@ public class WoocationGeoCrawler {
 		}
 	}
 
-	private void readPopulationFile() {
-		List<Population> populationList = readFile("E:\\Data\\population_geonameid.json", Population.class);
+	public void readPopulationFile() {
+		List<Population> populationList = readFile("D:\\Data\\population_geonameid.json", Population.class);
 		populationList.stream().forEach(item -> {
 			populationMap.put(Long.valueOf(item.getGeonameid()), item);
 		});
 	}
 	
-	private void readWeatherFile() {
-		List<Weather> weatherList = readFile("E:\\Data\\weather_geonameid.json", Weather.class);
+	public void readWeatherFile() {
+		List<Weather> weatherList = readFile("D:\\Data\\weather_geonameid.json", Weather.class);
 		weatherList.stream().forEach(item -> {
 			weatherMap.put(Long.valueOf(item.getGeonameid()), item);
 		});
 	}
 	
-	private void readNetworkFile() {
-		List<Network> networkList = readFile("E:\\Data\\network_geonameid.json", Network.class);
+	public void readNetworkFile() {
+		List<Network> networkList = readFile("D:\\Data\\network_geonameid.json", Network.class);
 		networkList.stream().forEach(item -> {
 			networkMap.put(Long.valueOf(item.getGeonameid()), item);
 		});
 	}
 	
-	private void readLanguageFile() {
-		List<Languages> languageList = readFile("E:\\Data\\languages_geoname.json", Languages.class);
+	public void readLanguageFile() {
+		List<Languages> languageList = readFile("D:\\Data\\languages_geoname.json", Languages.class);
 		languageList.stream().forEach(item -> {
 			languageMap.put(item.getGeonameid(), item);
 		});
 	}
 	
-	private void readVegetationFile() {
-		List<Vegetation> vegetationList = readFile("E:\\Data\\vegetation_geonameid.json", Vegetation.class);
+	public void readVegetationFile() {
+		List<Vegetation> vegetationList = readFile("D:\\Data\\vegetation_geonameid.json", Vegetation.class);
 		vegetationList.stream().forEach(item -> {
 			vegetationMap.put(Long.valueOf(item.getGeonameid()), item);
 		});
 	}
 	
-	private void readUVFile() {
-		List<UVBean> uvList = readFile("E:\\Data\\uvi_geonameid.json", UVBean.class);
+	public void readUVFile() {
+		List<UVBean> uvList = readFile("D:\\Data\\uvi_geonameid.json", UVBean.class);
 		uvList.stream().forEach(item -> {
 			uvMap.put(Long.valueOf(item.getGeonameid()), item);
 		});
 	}
 
-	private <T> List<T> readFile(String fileName, Class<T> pojoClass) {
+	public <T> List<T> readFile(String fileName, Class<T> pojoClass) {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
 		List<T> list = null;
@@ -151,6 +151,8 @@ public class WoocationGeoCrawler {
 		return list;
 
 	}
+	
+	
 
 	/**
 	 * The main method.

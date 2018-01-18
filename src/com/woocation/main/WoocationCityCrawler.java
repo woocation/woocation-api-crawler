@@ -56,7 +56,7 @@ public class WoocationCityCrawler {
 	public void doCrawl(){
 //		cityCrawler.doCrawl("/home/ankit/woocation/city/cities1000.txt");
 //		WoocationWriter.writeContent("/home/ankit/woocation/cities_new.txt", cityCrawler.getData());
-		cityCrawler.findDuplicate("/home/ankit/woocation/cities_new.txt");
+//		cityCrawler.findDuplicate("/home/ankit/woocation/cities_new.txt");
 		WoocationWriter.writeContent("/home/ankit/woocation/duplicate.txt", cityCrawler.getDuplicateData());
 	}
 	
