@@ -2,9 +2,12 @@ package com.woocation.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * The Class Languages.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Languages {
 
 	/** The geonameid. */
@@ -14,7 +17,7 @@ public class Languages {
 	private String city;
 
 	/** The languages. */
-	private List<List<Object>> languages;
+	private List<LanguageDetails> languages;
 
 	/**
 	 * Gets the geonameid.
@@ -55,21 +58,16 @@ public class Languages {
 	}
 
 	/**
-	 * Gets the languages.
-	 *
 	 * @return the languages
 	 */
-	public List<List<Object>> getLanguages() {
+	public List<LanguageDetails> getLanguages() {
 		return languages;
 	}
 
 	/**
-	 * Sets the languages.
-	 *
-	 * @param languages
-	 *            the languages to set
+	 * @param languages the languages to set
 	 */
-	public void setLanguages(List<List<Object>> languages) {
+	public void setLanguages(List<LanguageDetails> languages) {
 		this.languages = languages;
 	}
 }

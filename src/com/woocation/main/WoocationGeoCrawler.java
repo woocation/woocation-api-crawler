@@ -13,11 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.crypto.CipherOutputStream;
-
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.woocation.model.CityEsBean;
@@ -41,6 +37,8 @@ public class WoocationGeoCrawler {
 	private String filePath = "E:\\Data\\";
 	
 	private String cityFile = "E:\\Data\\cities_new.txt";
+	
+	private String cityExportLocation = "E:\\Data\\CityBean\\";
 	
 	/** The subway map. */
 	public Map<Long, Subway> subwayMap = new HashMap<>();
@@ -76,6 +74,7 @@ public class WoocationGeoCrawler {
 			cityCrawler.getGeoCityListGeneric(cityFile);
 			readAllDate();
 			combinedData();
+			clearExistingData();
 			writeCityBean();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,12 +86,25 @@ public class WoocationGeoCrawler {
 		 int count = 1;
 		 for(List<CityEsBean> cityList : subSets){
 			 ObjectMapper mapper = new ObjectMapper();
-			 File file = new File("E:\\Data\\CityBean\\" + count + ".json");
+			 File file = new File(cityExportLocation + count + ".json");
 			 file.createNewFile();
 			 mapper.writeValue(file, cityList);
 			 System.out.println("Data exported to file --> " + file.getAbsolutePath());
 			 count++;
 		 }
+	}
+	
+	private void clearExistingData() throws IOException{
+		 File file = new File(cityExportLocation);
+		 if(file.isDirectory()){
+			 List<File> filesInFolder = Files.walk(Paths.get(cityExportLocation))
+	                    .filter(Files::isRegularFile)
+	                    .map(Path::toFile)
+	                    .collect(Collectors.toList());
+			 
+			 filesInFolder.stream().forEach( prevFile -> prevFile.delete());
+		 }
+			
 	}
 	
 	public void combinedData(){
@@ -197,7 +209,7 @@ public class WoocationGeoCrawler {
 	}
 	
 	public void readLanguageFile() {
-		List<Languages> languageList = readFile(filePath + "languages_geoname.json", Languages.class);
+		List<Languages> languageList = readFile(filePath + "languages_geoname_new.json", Languages.class);
 		languageList.stream().forEach(item -> {
 			languageMap.put(item.getGeonameid(), item);
 		});
