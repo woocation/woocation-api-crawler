@@ -99,6 +99,8 @@ public class CityEsBean {
 	
 	private Vegetation vegetation;
 	
+	private Weather weather;
+	
 	/**
 	 * Instantiates a new city es bean.
 	 */
@@ -683,5 +685,18 @@ public class CityEsBean {
 	public void setVegetation(Vegetation vegetation) {
 		this.vegetation = vegetation;
 	}
-	
+
+	/**
+	 * @return the weather
+	 */
+	public Weather getWeather() {
+		return weather;
+	}
+
+	/**
+	 * @param weather the weather to set
+	 */
+	public void setWeather(Weather weather) {
+		this.weather = weather;
+	}
 }
