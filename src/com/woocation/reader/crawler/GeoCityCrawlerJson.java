@@ -75,6 +75,8 @@ public class GeoCityCrawlerJson {
 			cityBean.setCurrencyCode(dataRow[23]);
 			cityBean.setEuropean(Boolean.valueOf(dataRow[24]));
 			cityBean.setSchengen(Boolean.valueOf(dataRow[25]));
+			
+			cityBean.setSuggest();
 
 		} catch (NumberFormatException e) {
 			System.out.println("Error -> " + dataLine);

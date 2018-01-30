@@ -1,6 +1,10 @@
 package com.woocation.model;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * The Class CityEsBean.
@@ -18,6 +22,12 @@ public class CityEsBean {
 
 	/** The alternate names. */
 	private String alternateNames;
+	
+	/** The ascii suggest. */
+	private List<CitySuggestBean> asciiSuggest;
+	
+	/** The alternate names suggest. */
+	private List<CitySuggestBean> alternateNamesSuggest;
 
 	/** The lattitude. */
 	private Location geoLocation;
@@ -698,5 +708,54 @@ public class CityEsBean {
 	 */
 	public void setWeather(Weather weather) {
 		this.weather = weather;
+	}
+
+	public List<CitySuggestBean> getAsciiSuggest() {
+		return asciiSuggest;
+	}
+
+	/**
+	 * @param asciiSuggest the asciiSuggest to set
+	 */
+	public void setAsciiSuggest(List<CitySuggestBean> asciiSuggest) {
+		this.asciiSuggest = asciiSuggest;
+	}
+
+	/**
+	 * @return the alternateNamesSuggest
+	 */
+	public List<CitySuggestBean> getAlternateNamesSuggest() {
+		return alternateNamesSuggest;
+	}
+
+	/**
+	 * @param alternateNamesSuggest the alternateNamesSuggest to set
+	 */
+	public void setAlternateNamesSuggest(List<CitySuggestBean> alternateNamesSuggest) {
+		this.alternateNamesSuggest = alternateNamesSuggest;
+	}
+	
+	/**
+	 * Sets the suggest.
+	 */
+	public void setSuggest() {
+		List<CitySuggestBean> suggestList = new ArrayList<>();
+		List<CitySuggestBean> alterNamesList = new ArrayList<>();
+		if(this.population.signum() > 0){
+			suggestList.add(new CitySuggestBean(this.getAsciiName(), this.population));
+			suggestList.add(new CitySuggestBean(this.getAsciiName() + " " + this.getCountryCode(), this.population));
+			suggestList.add(new CitySuggestBean(this.getAsciiName() + " " + this.getCountryName(), this.population));
+			
+			if(this.getAlternateNames().length() > 0){
+				String[] alternateCityArray = this.getAlternateNames().split(",");
+				for(String alterCity : alternateCityArray){
+					if(alterCity.trim().length() > 0){
+						alterNamesList.add(new CitySuggestBean(StringUtils.capitalize(alterCity), this.population));
+					}
+				}
+			}
+		}
+		this.setAsciiSuggest(suggestList);
+		this.setAlternateNamesSuggest(alterNamesList);
 	}
 }

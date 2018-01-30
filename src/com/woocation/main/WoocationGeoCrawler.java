@@ -33,12 +33,14 @@ import com.woocation.reader.crawler.GeoCityCrawlerJson;
  */
 public class WoocationGeoCrawler {
 
-	private String filePath = "D:\\Data\\";
-
-	private String cityFile = "D:\\Data\\cities_new.txt";
-
 	private String cityOutPut = "D:\\Data\\CityBean\\";
 
+	private String filePath = "E:\\Data\\";
+	
+	private String cityFile = "E:\\Data\\cities_new.txt";
+	
+	private String cityExportLocation = "E:\\Data\\CityBean\\";
+	
 	/** The subway map. */
 	public Map<Long, Subway> subwayMap = new HashMap<>();
 
@@ -73,6 +75,7 @@ public class WoocationGeoCrawler {
 			cityCrawler.getGeoCityListGeneric(cityFile);
 			readAllDate();
 			combinedData();
+			clearExistingData();
 			writeCityBean();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,9 +94,22 @@ public class WoocationGeoCrawler {
 			count++;
 		}
 	}
-
-	public void combinedData() {
-		for (CityEsBean cityBean : cityCrawler.getCityList()) {
+	
+	private void clearExistingData() throws Exception{
+		 File file = new File(cityExportLocation);
+		 if(file.isDirectory()){
+			 List<File> filesInFolder = Files.walk(Paths.get(cityExportLocation))
+	                    .filter(Files::isRegularFile)
+	                    .map(Path::toFile)
+	                    .collect(Collectors.toList());
+			 
+			 filesInFolder.stream().forEach( prevFile -> prevFile.delete());
+		 }
+			
+	}
+	
+	public void combinedData(){
+		for(CityEsBean cityBean : cityCrawler.getCityList()){
 			Long geoNameId = cityBean.getGeonameId();
 
 			Subway subway = subwayMap.get(geoNameId);
@@ -196,7 +212,7 @@ public class WoocationGeoCrawler {
 	}
 
 	public void readLanguageFile() {
-		List<Languages> languageList = readFile(filePath + "languages_geoname.json", Languages.class);
+		List<Languages> languageList = readFile(filePath + "languages_geoname_new.json", Languages.class);
 		languageList.stream().forEach(item -> {
 			languageMap.put(item.getGeonameid(), item);
 		});
