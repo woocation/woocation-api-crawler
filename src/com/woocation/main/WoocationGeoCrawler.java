@@ -33,14 +33,14 @@ import com.woocation.reader.crawler.GeoCityCrawlerJson;
  */
 public class WoocationGeoCrawler {
 
-	private String cityOutPut = "D:\\Data\\CityBean\\";
+	private String cityOutPut = "E:\\Data\\CityBean\\";
 
 	private String filePath = "E:\\Data\\";
-	
+
 	private String cityFile = "E:\\Data\\cities_new.txt";
-	
+
 	private String cityExportLocation = "E:\\Data\\CityBean\\";
-	
+
 	/** The subway map. */
 	public Map<Long, Subway> subwayMap = new HashMap<>();
 
@@ -94,22 +94,20 @@ public class WoocationGeoCrawler {
 			count++;
 		}
 	}
-	
-	private void clearExistingData() throws Exception{
-		 File file = new File(cityExportLocation);
-		 if(file.isDirectory()){
-			 List<File> filesInFolder = Files.walk(Paths.get(cityExportLocation))
-	                    .filter(Files::isRegularFile)
-	                    .map(Path::toFile)
-	                    .collect(Collectors.toList());
-			 
-			 filesInFolder.stream().forEach( prevFile -> prevFile.delete());
-		 }
-			
+
+	private void clearExistingData() throws Exception {
+		File file = new File(cityExportLocation);
+		if (file.isDirectory()) {
+			List<File> filesInFolder = Files.walk(Paths.get(cityExportLocation)).filter(Files::isRegularFile)
+					.map(Path::toFile).collect(Collectors.toList());
+
+			filesInFolder.stream().forEach(prevFile -> prevFile.delete());
+		}
+
 	}
-	
-	public void combinedData(){
-		for(CityEsBean cityBean : cityCrawler.getCityList()){
+
+	public void combinedData() {
+		for (CityEsBean cityBean : cityCrawler.getCityList()) {
 			Long geoNameId = cityBean.getGeonameId();
 
 			Subway subway = subwayMap.get(geoNameId);
@@ -145,7 +143,7 @@ public class WoocationGeoCrawler {
 		readElevationFile();
 		readPopulationFile();
 		readNetworkFile();
-		// readLanguageFile();
+		readLanguageFile();
 		readUVFile();
 		readWeatherFile();
 		readVegetationFile();
