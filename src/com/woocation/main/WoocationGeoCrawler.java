@@ -82,7 +82,7 @@ public class WoocationGeoCrawler {
 	 */
 	public WoocationGeoCrawler() {
 		try {
-//			cityCrawler.getGeoCityListGeneric(cityFile);
+			// cityCrawler.getGeoCityListGeneric(cityFile);
 			readAllDate();
 			combinedData();
 			clearExistingData();
@@ -171,7 +171,7 @@ public class WoocationGeoCrawler {
 		readElevationFile();
 		readPopulationFile();
 		readNetworkFile();
-		// readLanguageFile();
+		readLanguageFile();
 		readUVFile();
 		readWeatherFile();
 		readVegetationFile();
