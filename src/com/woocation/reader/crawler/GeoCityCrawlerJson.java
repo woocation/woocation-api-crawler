@@ -2,11 +2,15 @@ package com.woocation.reader.crawler;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.woocation.model.CityEsBean;
 import com.woocation.model.Location;
@@ -16,9 +20,6 @@ import com.woocation.utils.WooApiUtils;
  * The Class GeoCityCrawlerJson.
  */
 public class GeoCityCrawlerJson {
-
-	/** The city map. */
-	private Map<Long, CityEsBean> cityMap = new HashMap<>();
 
 	/** The city list. */
 	private List<CityEsBean> cityList = new ArrayList<>();
@@ -36,7 +37,11 @@ public class GeoCityCrawlerJson {
 		List<String> allLines = java.nio.file.Files.readAllLines(new File(path).toPath());
 		allLines.stream().forEach(line -> cityList.add(getCityEsBean(line)));
 	}
-
+	
+	public void readGeoCityExistingData(final String path) throws Exception{
+		cityList = readCityFile(path);
+	}
+	
 	/**
 	 * Gets the city es bean.
 	 *
@@ -81,22 +86,35 @@ public class GeoCityCrawlerJson {
 		} catch (NumberFormatException e) {
 			System.out.println("Error -> " + dataLine);
 		}
-		cityMap.put(cityBean.getGeonameId(), cityBean);
 		return cityBean;
 	}
-
+	
 	/**
-	 * @return the cityMap
+	 * Read subway file.
 	 */
-	public Map<Long, CityEsBean> getCityMap() {
-		return cityMap;
+	public List<CityEsBean> readCityFile(String filePath) {
+		try {
+			return readFile(filePath, CityEsBean.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	/**
-	 * @param cityMap the cityMap to set
-	 */
-	public void setCityMap(Map<Long, CityEsBean> cityMap) {
-		this.cityMap = cityMap;
+	public <T> List<T> readFile(String fileName, Class<T> pojoClass) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(Feature.ALLOW_NON_NUMERIC_NUMBERS, true);
+		List<T> list = null;
+		try {
+			File jsonFile = new File(fileName);
+			list = mapper.readValue(jsonFile, mapper.getTypeFactory().constructCollectionType(List.class, pojoClass));
+			System.out.println("Records Read in File --> " + fileName + " --> " + list.size());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+
 	}
 
 	/**
@@ -111,5 +129,9 @@ public class GeoCityCrawlerJson {
 	 */
 	public void setCityList(List<CityEsBean> cityList) {
 		this.cityList = cityList;
+	}
+	
+	public void clearList(){
+		this.cityList.clear();
 	}
 }

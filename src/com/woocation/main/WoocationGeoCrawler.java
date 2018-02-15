@@ -7,6 +7,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,17 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.woocation.model.Airport;
+import com.woocation.model.AirportDetails;
 import com.woocation.model.CityEsBean;
 import com.woocation.model.Elevation;
+import com.woocation.model.Holiday;
+import com.woocation.model.HolidayRaw;
+import com.woocation.model.HolidayRawReference;
 import com.woocation.model.Languages;
+import com.woocation.model.MountainRiverBeach;
 import com.woocation.model.Network;
 import com.woocation.model.Population;
 import com.woocation.model.Subway;
@@ -33,13 +41,21 @@ import com.woocation.reader.crawler.GeoCityCrawlerJson;
  */
 public class WoocationGeoCrawler {
 
-	private String cityOutPut = "E:\\Data\\CityBean\\";
+	public static final String DIRECTORY = "E:\\";
 
-	private String filePath = "E:\\Data\\";
+	/** The city out put. */
+	private String cityOutPut = DIRECTORY + "Data\\CityBean\\";
 
-	private String cityFile = "E:\\Data\\cities_new.txt";
+	private String cityOutPutFinal = DIRECTORY + "Data\\CityBeanFinal\\";
 
-	private String cityExportLocation = "E:\\Data\\CityBean\\";
+	/** The file path. */
+	private String filePath = DIRECTORY + "Data\\";
+
+	/** The city file. */
+	private String cityFile = DIRECTORY + "Data\\cities_new.txt";
+
+	/** The city export location. */
+	private String cityExportLocation = DIRECTORY + "Data\\CityBean\\";
 
 	/** The subway map. */
 	public Map<Long, Subway> subwayMap = new HashMap<>();
@@ -65,29 +81,82 @@ public class WoocationGeoCrawler {
 	/** The weather map. */
 	public Map<Long, Weather> weatherMap = new HashMap<>();
 
+	/** The holiday map. */
+	public Map<Long, List<Holiday>> holidayMap = new HashMap<>();
+
+	/** The city crawler. */
 	private GeoCityCrawlerJson cityCrawler = new GeoCityCrawlerJson();
+
+	/** The mrb map. */
+	private Map<Long, MountainRiverBeach> mrbMap = new HashMap<>();
+
+	/** The airport map. */
+	private Map<Long, List<Airport>> airportMap = new HashMap<>();
 
 	/**
 	 * Instantiates a new woocation geo crawler.
 	 */
 	public WoocationGeoCrawler() {
+		// processRawData();
+		processSpecificData();
+	}
+
+	/**
+	 * Process raw data.
+	 */
+	private void processRawData() {
 		try {
 			cityCrawler.getGeoCityListGeneric(cityFile);
 			readAllDate();
 			combinedData();
 			clearExistingData();
-			writeCityBean();
+			writeCityBean(cityOutPut);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void writeCityBean() throws Exception {
-		List<List<CityEsBean>> subSets = Lists.partition(cityCrawler.getCityList(), 10000);
+	private void processSpecificData() {
+		try {
+			readHolidayFile();
+			List<File> filesInFolder = Files.walk(Paths.get(cityOutPut)).filter(Files::isRegularFile).map(Path::toFile)
+					.collect(Collectors.toList());
+			int count = 1;
+			for (File file : filesInFolder) {
+				cityCrawler.readGeoCityExistingData(file.getAbsolutePath());
+				combinedHolidayData();
+				writeData(count);
+				cityCrawler.clearList();
+				count++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void writeData(int count) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			File file = new File(cityOutPutFinal + count + ".json");
+			file.createNewFile();
+			mapper.writeValue(file, cityCrawler.getCityList());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Write city bean.
+	 *
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void writeCityBean(String cityOutPutFolder) throws Exception {
+		List<List<CityEsBean>> subSets = Lists.partition(cityCrawler.getCityList(), 2500);
 		int count = 1;
 		for (List<CityEsBean> cityList : subSets) {
 			ObjectMapper mapper = new ObjectMapper();
-			File file = new File(cityOutPut + count + ".json");
+			File file = new File(cityOutPutFolder + count + ".json");
 			file.createNewFile();
 			mapper.writeValue(file, cityList);
 			System.out.println("Data exported to file --> " + file.getAbsolutePath());
@@ -95,6 +164,12 @@ public class WoocationGeoCrawler {
 		}
 	}
 
+	/**
+	 * Clear existing data.
+	 *
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void clearExistingData() throws Exception {
 		File file = new File(cityExportLocation);
 		if (file.isDirectory()) {
@@ -106,6 +181,9 @@ public class WoocationGeoCrawler {
 
 	}
 
+	/**
+	 * Combined data.
+	 */
 	public void combinedData() {
 		for (CityEsBean cityBean : cityCrawler.getCityList()) {
 			Long geoNameId = cityBean.getGeonameId();
@@ -133,11 +211,35 @@ public class WoocationGeoCrawler {
 
 			Weather weather = weatherMap.get(geoNameId);
 			cityBean.setWeather(weather);
+
+			// List<Holiday> holidayList = holidayMap.get(geoNameId);
+			// cityBean.setHolidays(holidayList);
+
+			List<Airport> airportList = airportMap.get(geoNameId);
+			cityBean.setAirports(airportList);
+
+			MountainRiverBeach mrb = mrbMap.get(geoNameId);
+			if (mrb != null) {
+				cityBean.setMountain(mrb.isMountain());
+				cityBean.setRiver(mrb.isRiver());
+				cityBean.setBeach(mrb.isBeach());
+			}
 		}
 
 		System.out.println(cityCrawler.getCityList().get(0));
 	}
 
+	public void combinedHolidayData() {
+		for (CityEsBean cityBean : cityCrawler.getCityList()) {
+			Long geoNameId = cityBean.getGeonameId();
+			List<Holiday> holidayList = holidayMap.get(geoNameId);
+			cityBean.setHolidays(holidayList);
+		}
+	}
+
+	/**
+	 * Read all date.
+	 */
 	private void readAllDate() {
 		readSubwayFile();
 		readElevationFile();
@@ -147,7 +249,9 @@ public class WoocationGeoCrawler {
 		readUVFile();
 		readWeatherFile();
 		readVegetationFile();
-
+		readMountainRiverBeachData();
+		readAirportFile();
+		// readHolidayFile();
 	}
 
 	/**
@@ -180,6 +284,9 @@ public class WoocationGeoCrawler {
 		}
 	}
 
+	/**
+	 * Read population file.
+	 */
 	public void readPopulationFile() {
 		List<Population> populationList = readFile(filePath + "population_geonameid.json", Population.class);
 		populationList.stream().forEach(item -> {
@@ -187,9 +294,12 @@ public class WoocationGeoCrawler {
 		});
 	}
 
+	/**
+	 * Read weather file.
+	 */
 	public void readWeatherFile() {
 		try {
-			List<File> filesInFolder = Files.walk(Paths.get(filePath + "wealth")).filter(Files::isRegularFile)
+			List<File> filesInFolder = Files.walk(Paths.get(filePath + "Weather")).filter(Files::isRegularFile)
 					.map(Path::toFile).collect(Collectors.toList());
 			filesInFolder.stream().forEach(file -> {
 				List<Weather> weatherList = readFile(file.getAbsolutePath(), Weather.class);
@@ -202,6 +312,58 @@ public class WoocationGeoCrawler {
 		}
 	}
 
+	/**
+	 * Read weather file.
+	 */
+	public void readHolidayFile() {
+		try {
+			List<File> filesInFolder = Files.walk(Paths.get(filePath + "Holidays")).filter(Files::isRegularFile)
+					.map(Path::toFile).collect(Collectors.toList());
+			filesInFolder.stream().forEach(file -> {
+				List<HolidayRawReference> holidayList = readFile(file.getAbsolutePath(), HolidayRawReference.class);
+				holidayList.stream().forEach(item -> {
+					holidayMap.put(Long.valueOf(item.getGeonameid()), getHoliday(item.getHolidays()));
+				});
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Records Read in File -->  holidayMap   --> " + holidayMap.size());
+	}
+
+	private List<Holiday> getHoliday(List<HolidayRaw> rawList) {
+		List<Holiday> holidayList = new ArrayList<>();
+		for (HolidayRaw rawObject : rawList) {
+			Holiday holiday = new Holiday();
+			String date = rawObject.getDd() + "-" + rawObject.getMm() + "-" + rawObject.getYy();
+			holiday.setHolidayName(rawObject.getName());
+			holiday.setHolidayDate(date);
+			holidayList.add(holiday);
+		}
+		return holidayList;
+	}
+
+	/**
+	 * Read mountain river beach data.
+	 */
+	public void readMountainRiverBeachData() {
+		try {
+			List<String> allLines = Files.readAllLines(Paths.get(filePath + "mountain_river_beach.csv"));
+			allLines.stream().forEach(line -> {
+				List<String> dataLineList = Splitter.on(",").splitToList(line);
+				MountainRiverBeach reference = new MountainRiverBeach(dataLineList.get(0), dataLineList.get(1),
+						dataLineList.get(2), dataLineList.get(3));
+				mrbMap.put(Long.valueOf(reference.getGeoNameId()), reference);
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Records Read in File -->  mountain_river_beach   --> " + mrbMap.size());
+	}
+
+	/**
+	 * Read network file.
+	 */
 	public void readNetworkFile() {
 		List<Network> networkList = readFile(filePath + "network_geonameid.json", Network.class);
 		networkList.stream().forEach(item -> {
@@ -209,6 +371,19 @@ public class WoocationGeoCrawler {
 		});
 	}
 
+	/**
+	 * Read network file.
+	 */
+	public void readAirportFile() {
+		List<AirportDetails> airPortList = readFile(filePath + "airports.json", AirportDetails.class);
+		airPortList.stream().forEach(item -> {
+			airportMap.put(Long.valueOf(item.getGeonameid()), item.getAirports());
+		});
+	}
+
+	/**
+	 * Read language file.
+	 */
 	public void readLanguageFile() {
 		List<Languages> languageList = readFile(filePath + "languages_geoname_new.json", Languages.class);
 		languageList.stream().forEach(item -> {
@@ -216,6 +391,9 @@ public class WoocationGeoCrawler {
 		});
 	}
 
+	/**
+	 * Read vegetation file.
+	 */
 	public void readVegetationFile() {
 		List<Vegetation> vegetationList = readFile(filePath + "vegetation_geonameid.json", Vegetation.class);
 		vegetationList.stream().forEach(item -> {
@@ -223,6 +401,9 @@ public class WoocationGeoCrawler {
 		});
 	}
 
+	/**
+	 * Read UV file.
+	 */
 	public void readUVFile() {
 		List<UVBean> uvList = readFile(filePath + "uvi_geonameid.json", UVBean.class);
 		uvList.stream().forEach(item -> {
@@ -230,6 +411,17 @@ public class WoocationGeoCrawler {
 		});
 	}
 
+	/**
+	 * Read file.
+	 *
+	 * @param <T>
+	 *            the generic type
+	 * @param fileName
+	 *            the file name
+	 * @param pojoClass
+	 *            the pojo class
+	 * @return the list
+	 */
 	public <T> List<T> readFile(String fileName, Class<T> pojoClass) {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(Feature.ALLOW_NON_NUMERIC_NUMBERS, true);

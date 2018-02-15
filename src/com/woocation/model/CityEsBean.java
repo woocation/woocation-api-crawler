@@ -120,6 +120,10 @@ public class CityEsBean {
 	/** The weather. */
 	private Weather weather;
 	
+	private List<Airport> airports;
+	
+	private List<Holiday> holidays;
+	
 	private boolean isMountain;
 	
 	private boolean isRiver;
@@ -803,6 +807,76 @@ public class CityEsBean {
 		this.alternateNamesSuggest = alternateNamesSuggest;
 	}
 	
+	/**
+	 * @return the airports
+	 */
+	public List<Airport> getAirports() {
+		return airports;
+	}
+
+	/**
+	 * @param airports the airports to set
+	 */
+	public void setAirports(List<Airport> airports) {
+		this.airports = airports;
+	}
+
+	/**
+	 * @return the holidays
+	 */
+	public List<Holiday> getHolidays() {
+		return holidays;
+	}
+
+	/**
+	 * @param holidays the holidays to set
+	 */
+	public void setHolidays(List<Holiday> holidays) {
+		this.holidays = holidays;
+	}
+
+	/**
+	 * @return the isMountain
+	 */
+	public boolean isMountain() {
+		return isMountain;
+	}
+
+	/**
+	 * @param isMountain the isMountain to set
+	 */
+	public void setMountain(boolean isMountain) {
+		this.isMountain = isMountain;
+	}
+
+	/**
+	 * @return the isRiver
+	 */
+	public boolean isRiver() {
+		return isRiver;
+	}
+
+	/**
+	 * @param isRiver the isRiver to set
+	 */
+	public void setRiver(boolean isRiver) {
+		this.isRiver = isRiver;
+	}
+
+	/**
+	 * @return the isBeach
+	 */
+	public boolean isBeach() {
+		return isBeach;
+	}
+
+	/**
+	 * @param isBeach the isBeach to set
+	 */
+	public void setBeach(boolean isBeach) {
+		this.isBeach = isBeach;
+	}
+
 	/**
 	 * Sets the suggest.
 	 */

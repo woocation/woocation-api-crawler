@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.woocation.model;
 
 import java.util.List;
@@ -7,6 +10,7 @@ public class AirportDetails {
 	/** The geonameid. */
 	private Long geonameid;
 
+	/** The airports. */
 	private List<Airport> airports;
 
 	public AirportDetails() {
@@ -41,5 +45,4 @@ public class AirportDetails {
 	public void setAirports(List<Airport> airports) {
 		this.airports = airports;
 	}
-
 }
