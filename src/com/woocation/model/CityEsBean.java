@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class CityEsBean.
  */
@@ -95,21 +96,35 @@ public class CityEsBean {
 	/** The schengen. */
 	private boolean schengen;
 	
+	/** The subway. */
 	private Subway subway;
 	
+	/** The elevation ref. */
 	private Elevation elevationRef;
 	
+	/** The network. */
 	private Network network;
 	
+	/** The population ref. */
 	private Population populationRef;
 	
+	/** The languages ref. */
 	private Languages languagesRef;
 	
+	/** The uv details. */
 	private UVBean uvDetails;
 	
+	/** The vegetation. */
 	private Vegetation vegetation;
 	
+	/** The weather. */
 	private Weather weather;
+	
+	private boolean isMountain;
+	
+	private boolean isRiver;
+	
+	private boolean isBeach;
 	
 	/**
 	 * Instantiates a new city es bean.
@@ -194,6 +209,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the geo location.
+	 *
 	 * @return the geoLocation
 	 */
 	public Location getGeoLocation() {
@@ -201,6 +218,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the geo location.
+	 *
 	 * @param geoLocation the geoLocation to set
 	 */
 	public void setGeoLocation(Location geoLocation) {
@@ -569,6 +588,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Checks if is european.
+	 *
 	 * @return the european
 	 */
 	public boolean isEuropean() {
@@ -576,14 +597,17 @@ public class CityEsBean {
 	}
 
 	/**
-	 * @param european
-	 *            the european to set
+	 * Sets the european.
+	 *
+	 * @param european            the european to set
 	 */
 	public void setEuropean(boolean european) {
 		this.european = european;
 	}
 
 	/**
+	 * Checks if is schengen.
+	 *
 	 * @return the schengen
 	 */
 	public boolean isSchengen() {
@@ -591,14 +615,17 @@ public class CityEsBean {
 	}
 
 	/**
-	 * @param schengen
-	 *            the schengen to set
+	 * Sets the schengen.
+	 *
+	 * @param schengen            the schengen to set
 	 */
 	public void setSchengen(boolean schengen) {
 		this.schengen = schengen;
 	}
 
 	/**
+	 * Gets the subway.
+	 *
 	 * @return the subway
 	 */
 	public Subway getSubway() {
@@ -606,6 +633,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the subway.
+	 *
 	 * @param subway the subway to set
 	 */
 	public void setSubway(Subway subway) {
@@ -613,6 +642,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the elevation ref.
+	 *
 	 * @return the elevationRef
 	 */
 	public Elevation getElevationRef() {
@@ -620,6 +651,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the elevation ref.
+	 *
 	 * @param elevationRef the elevationRef to set
 	 */
 	public void setElevationRef(Elevation elevationRef) {
@@ -627,6 +660,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the network.
+	 *
 	 * @return the network
 	 */
 	public Network getNetwork() {
@@ -634,6 +669,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the network.
+	 *
 	 * @param network the network to set
 	 */
 	public void setNetwork(Network network) {
@@ -641,6 +678,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the population ref.
+	 *
 	 * @return the populationRef
 	 */
 	public Population getPopulationRef() {
@@ -648,6 +687,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the population ref.
+	 *
 	 * @param populationRef the populationRef to set
 	 */
 	public void setPopulationRef(Population populationRef) {
@@ -655,6 +696,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the languages ref.
+	 *
 	 * @return the languagesRef
 	 */
 	public Languages getLanguagesRef() {
@@ -662,6 +705,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the languages ref.
+	 *
 	 * @param languagesRef the languagesRef to set
 	 */
 	public void setLanguagesRef(Languages languagesRef) {
@@ -669,6 +714,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the uv details.
+	 *
 	 * @return the uvDetails
 	 */
 	public UVBean getUvDetails() {
@@ -676,6 +723,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the uv details.
+	 *
 	 * @param uvDetails the uvDetails to set
 	 */
 	public void setUvDetails(UVBean uvDetails) {
@@ -683,6 +732,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the vegetation.
+	 *
 	 * @return the vegetation
 	 */
 	public Vegetation getVegetation() {
@@ -690,6 +741,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the vegetation.
+	 *
 	 * @param vegetation the vegetation to set
 	 */
 	public void setVegetation(Vegetation vegetation) {
@@ -697,6 +750,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the weather.
+	 *
 	 * @return the weather
 	 */
 	public Weather getWeather() {
@@ -704,17 +759,26 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the weather.
+	 *
 	 * @param weather the weather to set
 	 */
 	public void setWeather(Weather weather) {
 		this.weather = weather;
 	}
 
+	/**
+	 * Gets the ascii suggest.
+	 *
+	 * @return the ascii suggest
+	 */
 	public List<CitySuggestBean> getAsciiSuggest() {
 		return asciiSuggest;
 	}
 
 	/**
+	 * Sets the ascii suggest.
+	 *
 	 * @param asciiSuggest the asciiSuggest to set
 	 */
 	public void setAsciiSuggest(List<CitySuggestBean> asciiSuggest) {
@@ -722,6 +786,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Gets the alternate names suggest.
+	 *
 	 * @return the alternateNamesSuggest
 	 */
 	public List<CitySuggestBean> getAlternateNamesSuggest() {
@@ -729,6 +795,8 @@ public class CityEsBean {
 	}
 
 	/**
+	 * Sets the alternate names suggest.
+	 *
 	 * @param alternateNamesSuggest the alternateNamesSuggest to set
 	 */
 	public void setAlternateNamesSuggest(List<CitySuggestBean> alternateNamesSuggest) {
@@ -759,3 +827,5 @@ public class CityEsBean {
 		this.setAlternateNamesSuggest(alterNamesList);
 	}
 }
+
+
