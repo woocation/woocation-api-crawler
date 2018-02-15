@@ -235,6 +235,24 @@ public class WoocationGeoCrawler {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Read weather file.
+	 */
+	public void readHolidayFile() {
+		try {
+			List<File> filesInFolder = Files.walk(Paths.get(filePath + "wealth")).filter(Files::isRegularFile)
+					.map(Path::toFile).collect(Collectors.toList());
+			filesInFolder.stream().forEach(file -> {
+				List<Weather> weatherList = readFile(file.getAbsolutePath(), Weather.class);
+				weatherList.stream().forEach(item -> {
+					weatherMap.put(Long.valueOf(item.getGeonameid()), item);
+				});
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Read mountain river beach data.
